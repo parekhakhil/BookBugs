@@ -1,0 +1,7 @@
+django==3.0.8
+django-allauth
+django-crispy-forms
+django-ckeditor
+Pillow
+django-smartfields
+django-autocomplete-light
