@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, 'static'))
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 STATICFILES_DIRS = (os.path.join(STATIC_ROOT,'sitefiles'),)
 
@@ -41,17 +41,22 @@ CORE_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
 ]
 
 LOCAL_APPS = [
-
+    'authapp',
 ]
 
 THIRD_PARTY_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'smartfields',
+    'crsipy_forms',
+    'allauth.socialaccount.providers.google'
+    'allauth.socialaccount.providers.facebook',
 
 ]
 
@@ -66,6 +71,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap4', 'materialize_form','bootstrap',)
+
+CRISPY_TEMPLATE_PACK = 'materialize_form'
 
 ROOT_URLCONF = 'bookbugs.urls'
 
@@ -117,6 +126,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # Custom authentication backend for login using username or email
+    'allauth.backend.EmailOrUsernameModelBackend'
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -135,5 +152,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/assets/'
 MEDIA_URL = '/media/'
+
+# Allauth settings
+
+ACCOUNT_FORMS = {
+    'login': 'authapp.forms.CustomLoginForm',
+    'change_password': 'authapp.forms.CustomChangePwdForm',
+    'add_email': 'authapp.forms.CustomAddEmailForm',
+    'reset_password': 'authapp.forms.CustomResetPwdForm',
+    'reset_password_from_key': 'authapp.forms.CustomResetPasswordKeyForm',
+}
+
+ACCOUNT_SIGNUP_FORM_CLASS = 'authapp.signupform.SignupForm'
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
+
+ACCOUNT_LOGOUT_ON_GET = True
+
+SITE_ID = 1
